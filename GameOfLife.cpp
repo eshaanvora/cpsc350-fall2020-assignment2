@@ -13,31 +13,37 @@ GameOfLife::GameOfLife(){
 
 }
 
-GameOfLife::GameOfLife(int width, int height, double popDensity){
+GameOfLife::GameOfLife(int height, int width, double popDensity){
     mapWidth = width;
     mapHeight = height;
     mapPopDensity = popDensity;
     aliveCounter = 0;
+    mapNeighbors = 0;
+    worldEnd = false;
+
+
 
 }
 GameOfLife::~GameOfLife(){
 
 }
 
-void GameOfLife::initializeBoard(){
-    mapBoard = new int*[mapWidth];
-    for(int i = 0; i < mapWidth; i++){
-      mapBoard[i] = new int[mapHeight];
+void GameOfLife::initializeMapBoard(){
+    mapBoard = new int*[mapHeight];
+    for(int i = 0; i < mapHeight; i++){
+      mapBoard[i] = new int[mapWidth];
     }
 }
-// void GameOfLife::initializeNextMapBoard(){
-//
-// }
+void GameOfLife::initializeNextMapBoard(){
+    nextMapBoard = new int*[mapHeight];
+    for(int i = 0; i < mapHeight; i++)
+        nextMapBoard[i] = new int[mapWidth];
+}
 
 void GameOfLife::populateBoard(){
   srand(time(NULL));
-  for (int i =0;i < mapWidth;++i) {
-    for (int j =0;j < mapHeight;++j) {
+  for (int i =0;i < mapHeight;i++) {
+    for (int j =0;j < mapWidth;j++) {
         double randVal = rand() / double(RAND_MAX);
         if(randVal < mapPopDensity){
           mapBoard[i][j] = 1;
@@ -50,7 +56,7 @@ void GameOfLife::populateBoard(){
 
 
 void GameOfLife::printMapBoard(){
-    cout << "Board is : " << endl;
+    cout << "Gen 0 : " << endl;
     cout << mapHeight << endl;
     cout << mapWidth << endl;
     //print GOL mapBoard
@@ -62,6 +68,15 @@ void GameOfLife::printMapBoard(){
     }
 }
 
+void GameOfLife:: printNextMapBoard(){
+  //print GOL mapBoard
+  for(int i = 0; i < mapHeight; i++){
+    for(int j = 0; j < mapWidth; j++){
+      cout << " "<< nextMapBoard[i][j] << " ";
+    }
+    cout << endl;
+  }
+}
 
 void GameOfLife::clearMapBoard(){
     for(int i = 0; i < mapWidth; i++){
@@ -69,60 +84,55 @@ void GameOfLife::clearMapBoard(){
     }
     delete [] mapBoard;
 }
+void GameOfLife::clearNextMapBoard(){
+    for(int i = 0; i < mapWidth; i++){
+        delete [] nextMapBoard[i];
+    }
+    delete [] nextMapBoard;
+}
 
 void GameOfLife::simulateLife(){
-    nextMapBoard = new int*[mapWidth];
-    for(int i = 0; i < mapWidth; i++)
-        mapBoard[i] = new int[mapHeight];
-
     // Loop through every spot in our 2D array and check spots neighbors
     for (int x = 0; x < mapHeight; x++) {
       for (int y = 0; y < mapWidth; y++) {
-
-        // Add up all the states in a 3x3 surrounding grid
-        int neighbors = 0;
+        //Add up all the states in a 3x3 surrounding grid
         for (int i = -1; i <= 1; i++) {
           for (int j = -1; j <= 1; j++) {
-              // if x + i == negative then break
-              if((x+i || y+j) < 0){
-                cout<< "out of bounds";
+            if ((i+x) == -1 || (j+y) == -1 || (i+x) == mapWidth || (j+y) == mapHeight){
                 break;
-              }else{
-                neighbors += mapBoard[(x+i+mapHeight)%mapHeight][(y+j+mapWidth)%mapWidth];
-              }
-
+            } else{
+                cout << i << ":" << j << endl;
+                mapNeighbors += mapBoard[(x+i)][(y+j)];
+            }
+            }
           }
-        }
-        // A little trick to subtract the current cell's state since
-        // we added it in the above loop
-        neighbors -= mapBoard[x][y];
 
-        if((mapBoard[x][y] == 1) && (neighbors <  2)){
+        mapNeighbors -= mapBoard[x][y];
+
+        if((mapBoard[x][y] == 1) && (mapNeighbors <  2)){
           nextMapBoard[x][y] = 0;
-        }else if ((mapBoard[x][y] == 1) && (neighbors >  3)){
+        }else if ((mapBoard[x][y] == 1) && (mapNeighbors >  3)){
           nextMapBoard[x][y] = 0;
-        }else if ((mapBoard[x][y] == 0) && (neighbors == 3)){
+        }else if ((mapBoard[x][y] == 0) && (mapNeighbors == 3)){
           nextMapBoard[x][y] = 1;
         }else{
           nextMapBoard[x][y] = mapBoard[x][y];
         }
       }
     }
-
-    // Next is now our mapBoard
-
     mapBoard = nextMapBoard;
-
 
 }
 
 bool GameOfLife::hasWorldEnded(){
     for(int i = 1; i < mapHeight; i++){
       for(int j = 1; j < mapWidth; j++){
-        if(nextMapBoard[i][j] == 1){
-            aliveCounter++;
+        if(mapBoard[i][j] == 1){
+          aliveCounter++;
         }
       }
     }
-    return worldEnd;
+    if(aliveCounter < 1){
+      return true;
+    }
 }

@@ -36,22 +36,35 @@ int main(int argc, char  **argv) {
 
     } else if ( choiceA == 'b'){
       cout << "Enter Size Dimensions...." << endl;
-      cout << "X : " ;
+      cout << "Width : " ;
       cin >> x;
-      cout << "Y : " ;
+      cout << "Height : " ;
       cin >> y;
-      cout << "X : " << x << ", Y : " << y << endl;
+      cout << "Width : " << x << ", Height : " << y << endl;
       cout << "Enter initial population density (Enter a decimal value 0.0 - 1.0)" << endl;
       cin >> popDensity;
 
       GameOfLife userGen(x,y,popDensity);
-      userGen.initializeBoard();
+      userGen.initializeMapBoard();
+      userGen.initializeNextMapBoard();
       userGen.populateBoard();
       userGen.printMapBoard();
-      //userGen.initializeNextMapBoard();
+
+      //while (userGen.hasWorldEnded()==false) {
       userGen.simulateLife();
+      //userGen.clearMapBoard();
+      //userGen.simulateLife();
+
+        //userGen.printNextMapBoard();
+        //getchar();
+      //userGen.printNextMapBoard();
+      //}
 
 
+
+
+      //userGen.clearMapBoard();
+      //userGen.clearNextMapBoard();
       cout<<"done"<<endl;
     }
 

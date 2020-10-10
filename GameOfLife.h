@@ -8,8 +8,6 @@ class GameOfLife{
         GameOfLife(int width, int height, double popDensity);
         ~GameOfLife();
 
-
-
         int** mapBoard;
         int** nextMapBoard;
         int** temp;
@@ -19,14 +17,18 @@ class GameOfLife{
         double mapPopDensity;
         bool worldEnd;
         int aliveCounter;
+        int mapNeighbors;
 
         void populateBoard();
-        void initializeBoard();
-        //void initializeNextMapBoard();
+        void initializeMapBoard();
+        void initializeNextMapBoard();
         void printMapBoard();
-        void clearMapBoard();
-        void simulateLife();
         void printNextMapBoard();
+
+        void clearMapBoard();
+        void clearNextMapBoard();
+
+        void simulateLife();
 
         bool hasWorldEnded();
 
