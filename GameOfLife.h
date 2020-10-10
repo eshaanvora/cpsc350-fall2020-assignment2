@@ -11,6 +11,7 @@ class GameOfLife{
         int** mapBoard;
         int** nextMapBoard;
         int** temp;
+        char** inputFileMap;
 
         int mapHeight;
         int mapWidth;
@@ -23,7 +24,7 @@ class GameOfLife{
         void initializeMapBoard();
         void initializeNextMapBoard();
         void printMapBoard();
-        void printNextMapBoard();
+        void populateBoardMapFromFile(std::string fileName);
 
         void clearMapBoard();
         void clearNextMapBoard();

@@ -1,5 +1,4 @@
 #include "GameOfLife.cpp"
-#include "Simulation.cpp"
 #include <fstream>    // file I/O
 #include <iostream>
 #include <array>
@@ -11,28 +10,24 @@ int main(int argc, char  **argv) {
     string userPath = "";
     string mapLines = "";
     string inFileLine = "";
-    string pause = "";
-    int wow = 0;
     double popDensity ;
 
     cout  << "Would you like to (a) use a map file or (b) generate a random assignment?" << endl;
     cin >> choiceA;
-
+    //If user chooses 'a' prompt for map file, If user chooses 'b' prompt for dimensions and population density
     if (choiceA == 'a') {
-      // USER PROVIDES MAP FILE
+      // User Provided Map File
       cout << "Enter map file name..."<< endl;
       cin >> userPath;
 
       cout << "Map File Selected....'" << userPath << "'" << endl;
-      ifstream inFile(userPath);
-      while(inFile >> inFileChar){
 
-          mapLines += inFileChar;
-          cout << mapLines << endl;
+      //Instantiate new GameOfLife Object "mapFile"
+      GameOfLife mapFile;
 
-      }
-      cout << "mapLines: ";
-      cout << mapLines;
+      //Call methods to populate mapFile object with a mapBoard and print to console
+      mapFile.populateBoardMapFromFile(userPath);
+      mapFile.printMapBoard();
 
     } else if ( choiceA == 'b'){
       cout << "Enter Size Dimensions...." << endl;
@@ -44,28 +39,21 @@ int main(int argc, char  **argv) {
       cout << "Enter initial population density (Enter a decimal value 0.0 - 1.0)" << endl;
       cin >> popDensity;
 
+      //Instantiate new GameOfLife Object "userGen"
+
       GameOfLife userGen(x,y,popDensity);
+
+      //Call method to initialize mapBoard, Initialize mapBoard copy, populate the board based on population density, and output to console
       userGen.initializeMapBoard();
       userGen.initializeNextMapBoard();
       userGen.populateBoard();
       userGen.printMapBoard();
-
+      // code to create successive generations of original mapBoard (couldn't get it to work )
       //while (userGen.hasWorldEnded()==false) {
-      userGen.simulateLife();
-      //userGen.clearMapBoard();
-      //userGen.simulateLife();
-
-        //userGen.printNextMapBoard();
-        //getchar();
-      //userGen.printNextMapBoard();
+        userGen.simulateLife();
       //}
-
-
-
-
-      //userGen.clearMapBoard();
-      //userGen.clearNextMapBoard();
-      cout<<"done"<<endl;
+      userGen.clearMapBoard();
+      userGen.clearNextMapBoard();
     }
 
   return 0;
