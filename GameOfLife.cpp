@@ -6,7 +6,7 @@
 using namespace std;
 
 
-//Constructors
+//Default constructor
 GameOfLife::GameOfLife(){
     mapWidth = 0;
     mapHeight = 0;
@@ -14,7 +14,7 @@ GameOfLife::GameOfLife(){
     aliveCounter = 0;
 
 }
-
+//Overloaded Constructor
 GameOfLife::GameOfLife(int height, int width, double popDensity){
     mapWidth = width;
     mapHeight = height;
